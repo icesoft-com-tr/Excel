@@ -23,7 +23,7 @@ namespace wcfExel
             return string.Format("You entered: {0}", value);
         }
 
-        public byte[] GetExcel(string[] Baslik, DataTable dt)
+        public byte[] datatableToExcel(string[] Baslik, DataTable dt)
         {
             try
             {

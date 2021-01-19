@@ -17,6 +17,6 @@ namespace wcfExel
         string GetData(int value);
 
         [OperationContract]
-        byte[] GetExcel(string[] Baslik, DataTable dataTable);
+        byte[] datatableToExcel(string[] Baslik, DataTable dataTable);
     }
 }
