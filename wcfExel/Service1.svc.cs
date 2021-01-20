@@ -14,6 +14,8 @@ using System.Text;
 
 namespace wcfExel
 {
+    public enum Tema { Mavi = 1, Yeşil = 2, Kırmızı = 3 }
+
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IExcel
@@ -23,11 +25,27 @@ namespace wcfExel
             return string.Format("You entered: {0}", value);
         }
 
-        public byte[] datatableToExcel(string[] Baslik, DataTable dt)
+        public byte[] datatableToExcel(string[] Baslik, DataTable dt, Tema t = Tema.Mavi)
         {
             try
             {
                 byte[] r;
+                Color arkaplan;
+
+                switch (t)
+                {
+                    case Tema.Mavi:
+                        arkaplan = Color.Blue;
+                        break;
+                    case Tema.Yeşil:
+                        arkaplan = Color.Green;
+                        break;
+                    case Tema.Kırmızı:
+                        arkaplan = Color.Red;
+                        break;
+                }
+
+
 
                 using (ExcelPackage excel = new ExcelPackage())
                 {
