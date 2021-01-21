@@ -30,55 +30,61 @@ namespace wcfExel
             try
             {
                 byte[] r;
-                Color arkaplan;
+
+                Color arkaplan = Color.Blue;
 
                 switch (t)
                 {
                     case Tema.Mavi:
-                        arkaplan = Color.Blue;
+                        arkaplan = Color.FromArgb(219, 229, 241);
                         break;
                     case Tema.Yeşil:
-                        arkaplan = Color.Green;
+                        arkaplan = Color.FromArgb(234, 241, 221);
                         break;
                     case Tema.Kırmızı:
-                        arkaplan = Color.Red;
+                        arkaplan = Color.FromArgb(242, 221, 220);
                         break;
                 }
-
-
 
                 using (ExcelPackage excel = new ExcelPackage())
                 {
                     ExcelWorksheet ws = excel.Workbook.Worksheets.Add("Sayfa");
+                    ws.View.ShowGridLines = false;
 
-                    for (int i = 0; i < Baslik.Length; i++)
+                    for (int i = 1; i <= Baslik.Length; i++)
                     {
-                        ws.Cells[i + 1, 1].Value = Baslik[i];
-                        ws.Cells[i + 1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                        ws.Column(i + 1).Style.HorizontalAlignment = (ExcelHorizontalAlignment)ExcelVerticalAlignment.Center;
-                        ws.Cells[i + 1, 1].Style.Font.Size = 13;
-                        ws.Cells[i + 1, 1].Value = Baslik[i];
-                        ws.Cells[i + 1, 1, i + 1, dt.Columns.Count].Merge = true;
+                        ws.Cells[i+1, 1, i+1, dt.Columns.Count].Merge = true;
+                        ws.Cells[i+1, 1].Value = Baslik[i-1];
+                        ws.Cells[i+1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        ws.Column(i).Style.HorizontalAlignment = (ExcelHorizontalAlignment)ExcelVerticalAlignment.Center;
+                        ws.Cells[i+1, 1].Style.Font.Size = 13;
                     }//Başlıkları kolon uzunluğu kadar başıkları ekliyoruz.
 
-                    ws.Cells[Baslik.Length + 2, 1].LoadFromDataTable(dt, true);
 
-                    ws.Row(Baslik.Length + 2).Height = 30;
-                    ws.Row(Baslik.Length + 2).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    ws.Row(Baslik.Length + 2).Style.Font.Size = 15;
-                    ws.Row(Baslik.Length + 2).Style.Font.Bold = true;
+                    ws.Cells[Baslik.Length + 3, 1].LoadFromDataTable(dt, true);
 
-                    ws.Cells[Baslik.Length + 2, 1, Baslik.Length + 2 + dt.Rows.Count, dt.Columns.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[Baslik.Length + 2, 1, Baslik.Length + 2 + dt.Rows.Count, dt.Columns.Count].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                    ws.Row(Baslik.Length + 3).Height = 24;
+                    ws.Row(Baslik.Length + 3).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Row(Baslik.Length + 3).Style.Font.Size = 11;
+                    ws.Row(Baslik.Length + 3).Style.Font.Color.SetColor(Color.Red);
+                    ws.Row(Baslik.Length + 3).Style.Font.Bold = true;
+                    ws.Cells[2,1,Baslik.Length + 1,dt.Columns.Count].Style.Border.BorderAround(ExcelBorderStyle.Thin);
 
-                    using (ExcelRange Rng = ws.Cells[Baslik.Length + 2, 1, Baslik.Length + 2 + dt.Rows.Count, dt.Columns.Count])
+                    ws.Cells[2, 1, 1 + Baslik.Length, dt.Columns.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    ws.Cells[2, 1, 1 + Baslik.Length, dt.Columns.Count].Style.Fill.BackgroundColor.SetColor(arkaplan);
+
+                    ws.Cells[Baslik.Length + 3, 1, Baslik.Length + 3, dt.Columns.Count].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[Baslik.Length + 3, 1, Baslik.Length + 3, dt.Columns.Count].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                    ws.Cells[Baslik.Length + 3, 1, Baslik.Length + 3, dt.Columns.Count].Style.Border.Top.Color.SetColor(Color.Black);
+                    ws.Cells[Baslik.Length + 3, 1, Baslik.Length + 3, dt.Columns.Count].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                    for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        for (int i = Baslik.Length; i <= (Baslik.Length+2+dt.Rows.Count); i++)
+                        if (i%2 == 0)
                         {
-                            if (i%2 == 0)
-                            {
-                                ws.Row(i).Style.Fill.PatternType = ExcelFillStyle.None;
-                            }
+                            ws.Cells[Baslik.Length + 4 + i, 1, Baslik.Length + 4 + i, dt.Columns.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            ws.Cells[Baslik.Length + 4 + i, 1, Baslik.Length + 4 + i, dt.Columns.Count].Style.Fill.BackgroundColor.SetColor(arkaplan);
                         }
                     }
 
@@ -89,6 +95,10 @@ namespace wcfExel
                         if (dt.Columns[i - 1].DataType == typeof(int))
                         {
                             ws.Column(i).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        }
+                        if (dt.Columns[i-1].DataType == typeof(double))
+                        {
+                            ws.Column(i).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
                     }
 
