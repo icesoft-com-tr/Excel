@@ -17,6 +17,6 @@ namespace wcfExel
         string GetData(int value);
 
         [OperationContract]
-        byte[] datatableToExcel(string[] Baslik, DataTable dataTable, Tema t);
+        byte[] datatableToExcel(string[] Baslik, DataTable dataTable, Tema t, int[] toplam);
     }
 }
