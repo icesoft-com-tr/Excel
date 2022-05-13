@@ -14,9 +14,9 @@ namespace wcfExel
     public interface IExcel
     {
         [OperationContract]
-        string GetData(int value);
+        byte[] datatableToExcel(string[] Baslik, DataTable dataTable, Tema t, int[] toplam);
 
         [OperationContract]
-        byte[] datatableToExcel(string[] Baslik, DataTable dataTable, Tema t, int[] toplam);
+        byte[] jsonToExcel(string json, Tema t = Tema.Mavi, int[] toplam = null);
     }
 }
